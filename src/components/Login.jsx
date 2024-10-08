@@ -14,10 +14,8 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const resp = await login(emailId, password);
-    if (resp.status === 200) {
-      dispatch(addUser(resp.data.data));
-      naviagte("/");
-    }
+    dispatch(addUser(resp.data));
+    naviagte("/");
   };
 
   return (

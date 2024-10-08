@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Body from "./components/Body";
 import Profile from "./components/Profile";
 import Feed from "./components/Feed";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "profile",
-        element: <Profile />,
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "login",
