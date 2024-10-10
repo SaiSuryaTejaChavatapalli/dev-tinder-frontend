@@ -4,7 +4,7 @@ import { logout } from "../services/auth";
 import { removeUser } from "../utils/slices/userSlice";
 
 const Navbar = () => {
-  const loggedInUser = useSelector((store) => store.user);
+  const loggedInUser = useSelector((store) => store?.user?.userData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useEffect } from "react";
@@ -7,13 +7,18 @@ import { getProfile } from "../services/profile";
 import { addUser } from "../utils/slices/userSlice";
 const Body = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const fetchUser = async () => {
     try {
       const resp = await getProfile();
-      const loggedInUser = resp.data;
-      if (loggedInUser) dispatch(addUser(loggedInUser));
+      const loggedInUser = resp.data.data;
+      if (loggedInUser) {
+        dispatch(addUser(loggedInUser));
+      }
     } catch (error) {
-      console.log(error);
+      if (error.status === 401) {
+        navigate("/login");
+      }
     }
   };
 

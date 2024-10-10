@@ -3,9 +3,9 @@ import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
   const loggedInUser = useSelector((store) => store.user);
-  console.log("protected", loggedInUser);
+  return children;
 
-  return !loggedInUser ? <Navigate to="/login" /> : children;
+  return !loggedInUser?.userData ? <Navigate to="/login" /> : children;
 };
 
 export default ProtectedRoute;
