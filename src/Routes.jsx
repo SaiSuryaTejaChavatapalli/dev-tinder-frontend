@@ -5,6 +5,8 @@ import Body from "./components/Body";
 import Profile from "./components/Profile";
 import Feed from "./components/Feed";
 import ProtectedRoute from "./ProtectedRoute";
+import ConnectionRequests from "./components/ConnectionRequests";
+import Connections from "./components/Connections";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
+      },
+      {
+        path: "connection-requests",
+        element: <ConnectionRequests />,
+      },
+      {
+        path: "connections",
+        element: <Connections />,
       },
       {
         path: "/",
