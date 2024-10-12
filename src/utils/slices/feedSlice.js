@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   feedData: [],
   errorMessage: "",
+  loading: false,
 };
 
 const feedSlice = createSlice({
@@ -21,8 +22,15 @@ const feedSlice = createSlice({
       state.errorMessage = action.payload;
       return state;
     },
+    removeUserFromFeed: (state, action) => {
+      state.feedData = state.feedData.filter(
+        (feed) => feed._id !== action.payload
+      );
+      return state;
+    },
   },
 });
 
 export default feedSlice.reducer;
-export const { addFeedData, setErrorMessage } = feedSlice.actions;
+export const { addFeedData, setErrorMessage, removeUserFromFeed } =
+  feedSlice.actions;

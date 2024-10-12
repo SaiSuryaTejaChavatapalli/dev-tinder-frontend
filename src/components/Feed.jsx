@@ -19,10 +19,15 @@ const Feed = () => {
     getFeedData();
   }, []);
 
+  if (!feed.feedData) return;
+
+  if (feed.feedData.length === 0)
+    return <h1 className="text-center mt-5">No Users Found</h1>;
+
   return (
     feed.feedData.length > 0 && (
       <div>
-        <div>
+        <div className="flex flex-col items-center justify-center">
           <UserCard user={feed?.feedData[0]} />
         </div>
       </div>

@@ -1,6 +1,20 @@
 import PropTypes from "prop-types";
+import { postSendRequest } from "../services/request";
+import { useDispatch } from "react-redux";
+import { removeUserFromFeed } from "../utils/slices/feedSlice";
 const UserCard = ({ user }) => {
-  const { firstName, lastName, photoUrl, age, gender, about } = user;
+  const dispatch = useDispatch();
+
+  const handleSendRequest = async (status, userId) => {
+    try {
+      await postSendRequest(status, userId);
+      dispatch(removeUserFromFeed(userId));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const { firstName, lastName, photoUrl, age, gender, about, _id } = user;
   return (
     <div className="card bg-base-100 w-96 shadow-xl m-3">
       <figure>
@@ -13,8 +27,18 @@ const UserCard = ({ user }) => {
 
         <p>{about}</p>
         <div className="card-actions justify-center items-center">
-          <button className="btn btn-secondary">Ignore</button>
-          <button className="btn btn-success">Interested</button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => handleSendRequest("ignored", _id)}
+          >
+            Ignore
+          </button>
+          <button
+            className="btn btn-success"
+            onClick={() => handleSendRequest("interested", _id)}
+          >
+            Interested
+          </button>
         </div>
       </div>
     </div>
