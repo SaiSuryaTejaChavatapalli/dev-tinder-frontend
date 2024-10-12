@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../services/profile";
+import { addUser } from "../utils/slices/userSlice";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const loggedInUser = useSelector((store) => store?.user?.userData);
   const [user, setUser] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     setUser(loggedInUser);
   }, [loggedInUser]);
 
   const handleUpdate = async (e) => {
+    e.preventDefault();
     const allowedEditFields = [
       "firstName",
       "lastName",
@@ -27,11 +32,16 @@ const Profile = () => {
       }
     });
 
-    e.preventDefault();
+    setErrorMessage("");
     try {
-      await updateProfile(user);
+      const resp = await updateProfile(user);
+      dispatch(addUser(resp.data.data));
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error.response.data);
     }
   };
 
@@ -147,10 +157,19 @@ const Profile = () => {
               </div>
             </div>
 
+            <p className="text-red-600 my-2">{errorMessage}</p>
+
             <button className="btn btn-primary" onClick={handleUpdate}>
               Update
             </button>
           </form>
+          {showToast ? (
+            <div className="toast toast-top toast-center">
+              <div className="alert alert-success">
+                <span>Profile updated successfully.</span>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
