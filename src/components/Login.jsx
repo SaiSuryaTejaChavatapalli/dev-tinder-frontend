@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "../services/auth";
+import { login, signup } from "../services/auth";
 
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/slices/userSlice";
@@ -7,20 +7,35 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
+
+  const [isLoginFormVisible, setIsLoginFormVisible] = useState(true);
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const resp = await login(emailId, password);
       dispatch(addUser(resp.data.data));
-      naviagte("/");
+      navigate("/");
     } catch (error) {
       console.log("Err", error);
       setError(error?.response?.data || "Something went wrong");
+    }
+  };
+
+  const handleSignup = async (e) => {
+    try {
+      e.preventDefault();
+      const resp = await signup({ firstName, lastName, emailId, password });
+      dispatch(addUser(resp.data.data));
+      return navigate("/profile");
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -35,8 +50,48 @@ const Login = () => {
             />
           </figure>
           <div className="card-body flex gap-6">
-            <h1 className="card-title">Login</h1>
+            <h1 className="card-title">
+              {isLoginFormVisible ? "Login" : "Signup"}
+            </h1>
 
+            {!isLoginFormVisible ? (
+              <>
+                <label className="input input-bordered flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="h-4 w-4 opacity-70"
+                  >
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                  </svg>
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </label>
+                <label className="input input-bordered flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="h-4 w-4 opacity-70"
+                  >
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                  </svg>
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </label>
+              </>
+            ) : null}
             <label className="input input-bordered flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -72,13 +127,32 @@ const Login = () => {
               <input
                 type="password"
                 className="grow"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </label>
             <p className="text-red-500">{error}</p>
-            <button className="btn btn-success" onClick={handleLogin}>
-              Login
+            {isLoginFormVisible ? (
+              <button className="btn btn-success" onClick={handleLogin}>
+                Login
+              </button>
+            ) : (
+              <button className="btn btn-success" onClick={handleSignup}>
+                SignUp
+              </button>
+            )}
+
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setIsLoginFormVisible((prev) => !prev);
+              }}
+              className="underline text-blue-800"
+            >
+              {isLoginFormVisible
+                ? "Not a member. Signup?"
+                : "Already a member, SignIn?"}
             </button>
           </div>
         </div>

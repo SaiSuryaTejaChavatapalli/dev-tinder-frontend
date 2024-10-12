@@ -10,3 +10,7 @@ export const login = async (emailId, password) => {
 export const logout = async () => {
   return axiosInstance.post("logout");
 };
+
+export const signup = async (data) => {
+  return axiosInstance.post("signup", data);
+};
