@@ -5,10 +5,12 @@ import {
   setLoading,
 } from "../utils/slices/connectionRequests";
 import { getConnectionRequests } from "../services/user";
+import { postReviewRequest } from "../services/request";
 
 const ConnectionRequests = () => {
   const dispatch = useDispatch();
   const connectionRequests = useSelector((store) => store.connectionRequests);
+
   const fetchConnectionRequests = async () => {
     try {
       dispatch(setLoading(true));
@@ -21,9 +23,19 @@ const ConnectionRequests = () => {
     }
   };
 
+  const reviewRequests = async (status, requestId) => {
+    try {
+      await postReviewRequest(status, requestId);
+      fetchConnectionRequests();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchConnectionRequests();
   }, []);
+
   if (!connectionRequests) return;
 
   if (connectionRequests?.loading)
@@ -52,8 +64,22 @@ const ConnectionRequests = () => {
                     <p>Age:{age}</p>
                     <p>Skills: {skills.join(",")}</p>
                     <div className="flex gap-2 my-2">
-                      <button className="btn btn-error">Reject</button>
-                      <button className="btn btn-success">Accept</button>
+                      <button
+                        className="btn btn-error"
+                        onClick={() =>
+                          reviewRequests("rejected", connection.requestId)
+                        }
+                      >
+                        Reject
+                      </button>
+                      <button
+                        className="btn btn-success"
+                        onClick={() =>
+                          reviewRequests("accepted", connection.requestId)
+                        }
+                      >
+                        Accept
+                      </button>
                     </div>
                   </div>
 

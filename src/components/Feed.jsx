@@ -22,8 +22,6 @@ const Feed = () => {
   return (
     feed.feedData.length > 0 && (
       <div>
-        <h1>Feed</h1>
-
         <div>
           <UserCard user={feed?.feedData[0]} />
         </div>
