@@ -2,7 +2,7 @@ import { useState } from "react";
 import { login, signup } from "../services/auth";
 
 import { useDispatch } from "react-redux";
-import { addUser } from "../utils/slices/userSlice";
+import { addUser, setLoading } from "../utils/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -25,6 +25,8 @@ const Login = () => {
     } catch (error) {
       console.log("Err", error);
       setError(error?.response?.data || "Something went wrong");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 

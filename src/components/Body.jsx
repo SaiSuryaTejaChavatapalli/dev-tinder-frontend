@@ -2,10 +2,11 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getProfile } from "../services/profile";
-import { addUser } from "../utils/slices/userSlice";
+import { addUser, setLoading } from "../utils/slices/userSlice";
 const Body = () => {
+  const loading = useSelector((state) => state.user.loading);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const fetchUser = async () => {
@@ -19,12 +20,19 @@ const Body = () => {
       if (error.status === 401) {
         navigate("/login");
       }
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   useEffect(() => {
     fetchUser();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <Navbar />
