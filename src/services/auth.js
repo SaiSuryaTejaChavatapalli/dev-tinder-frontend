@@ -14,3 +14,7 @@ export const logout = async () => {
 export const signup = async (data) => {
   return axiosInstance.post("signup", data);
 };
+
+export const refreshToken = async () => {
+  return axiosInstance.post("refresh");
+};

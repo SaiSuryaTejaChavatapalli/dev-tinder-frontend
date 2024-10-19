@@ -20,7 +20,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const resp = await login(emailId, password);
-      dispatch(addUser(resp.data.data));
+      dispatch(addUser(resp.data));
       navigate("/");
     } catch (error) {
       console.log("Err", error);
