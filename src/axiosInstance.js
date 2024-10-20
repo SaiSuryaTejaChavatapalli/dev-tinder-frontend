@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "./utils/store/appStore";
-import { addUser, setLoading } from "./utils/slices/userSlice";
+import { addUser, removeUser, setLoading } from "./utils/slices/userSlice";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:7777/",
@@ -37,12 +37,16 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers[
           "Authorization"
         ] = `Bearer ${resp.data.accessToken}`;
-        await store.dispatch(addUser(resp.data));
+
+        store.dispatch(addUser(resp.data));
         return axiosInstance(originalRequest);
       } catch (refreshError) {
+        if (refreshError.response?.status === 401) {
+          store.dispatch(removeUser());
+        }
         return Promise.reject(refreshError);
       } finally {
-        await store.dispatch(setLoading(false));
+        store.dispatch(setLoading(false));
       }
     }
 
