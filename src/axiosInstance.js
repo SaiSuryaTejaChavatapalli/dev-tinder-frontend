@@ -3,7 +3,8 @@ import store from "./utils/store/appStore";
 import { addUser, removeUser, setLoading } from "./utils/slices/userSlice";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:7777/",
+  baseURL:
+    location.hostname === "localhost" ? "http://localhost:7777/" : "/api",
   withCredentials: true,
   headers: { "X-Custom-Header": "foobar" },
 });
