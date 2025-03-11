@@ -1,10 +1,10 @@
 import axios from "axios";
 import store from "./utils/store/appStore";
 import { addUser, removeUser, setLoading } from "./utils/slices/userSlice";
+import { BASE_URL } from "../constants";
 
 const axiosInstance = axios.create({
-  baseURL:
-    location.hostname === "localhost" ? "http://localhost:7777/" : "/api",
+  baseURL: BASE_URL,
   withCredentials: true,
   headers: { "X-Custom-Header": "foobar" },
 });
@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const resp = await axios.post(
-          `http://localhost:7777/refresh`,
+          `${BASE_URL}/refresh`,
           {},
           { withCredentials: true }
         );
